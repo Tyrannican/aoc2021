@@ -18,10 +18,10 @@ impl Solution {
         sol
     }
 
-    fn most_common_bit(&mut self, idx: usize) -> Bit {
-        let size = self.data.len();
+    fn most_common_bit(&self, data: &Vec<String>, idx: usize) -> Bit {
+        let size = data.len();
 
-        let ones = self.data
+        let ones = data
         .iter()
         .filter(|x| x.chars().nth(idx).unwrap() == '1')
         .count();
@@ -35,8 +35,41 @@ impl Solution {
         Bit::Zero
     }
 
+    fn filter_data(&self, data: &Vec<String>, idx: usize, pattern: char) -> Vec<String> {
+        data
+            .into_iter()
+            .filter(|s| s.chars().nth(idx).unwrap() == pattern)
+            .map(|s| s.to_owned())
+            .collect()
+    }
+
     pub fn get_rating(&mut self, common: bool) -> u32 {
-        0
+        let mut idx: usize = 0;
+        let mut rating: Vec<String> = self.data.clone();
+
+        while rating.len() > 1 {
+            let most_common = self.most_common_bit(&rating, idx);
+            let rating = match most_common {
+                Bit::One => {
+                    if common {
+                        self.filter_data(&rating, idx, '1')
+                    } else {
+                        self.filter_data(&rating, idx, '0')
+                    }
+                }
+                Bit::Zero => {
+                    if common {
+                        self.filter_data(&rating, idx, '0')
+                    } else {
+                        self.filter_data(&rating, idx, '1')
+                    }
+                }
+            };
+
+            idx += 1;
+        }
+
+        println!("{:?}", rating);
     }
 }
 
@@ -52,7 +85,7 @@ impl Solve for Solution {
         let mut epsilon = String::from("");
         
         for i in 0..item_size {
-            let most_common = self.most_common_bit(i);
+            let most_common = self.most_common_bit(&self.data, i);
             match most_common {
                 Bit::One => {
                     gamma.push_str("1");
