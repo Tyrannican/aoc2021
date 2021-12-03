@@ -46,22 +46,27 @@ impl Solution {
     pub fn get_rating(&mut self, common: bool) -> u32 {
         let mut idx: usize = 0;
         let mut rating: Vec<String> = self.data.clone();
+        let item_size = rating[0].len();
 
         while rating.len() > 1 {
+            if idx >= item_size {
+                break
+            }
+
             let most_common = self.most_common_bit(&rating, idx);
-            let rating = match most_common {
+            match most_common {
                 Bit::One => {
                     if common {
-                        self.filter_data(&rating, idx, '1')
+                        rating = self.filter_data(&rating, idx, '1')
                     } else {
-                        self.filter_data(&rating, idx, '0')
+                        rating = self.filter_data(&rating, idx, '0')
                     }
                 }
                 Bit::Zero => {
                     if common {
-                        self.filter_data(&rating, idx, '0')
+                        rating = self.filter_data(&rating, idx, '0')
                     } else {
-                        self.filter_data(&rating, idx, '1')
+                        rating = self.filter_data(&rating, idx, '1')
                     }
                 }
             };
@@ -69,7 +74,7 @@ impl Solution {
             idx += 1;
         }
 
-        println!("{:?}", rating);
+        u32::from_str_radix(&rating[0], 2).unwrap()
     }
 }
 
@@ -104,26 +109,10 @@ impl Solve for Solution {
         println!("Part 1: {}", gamma_val * epsilon_val);
     }
     
-    fn part2(&mut self) {
-        self.data = vec![
-            String::from("00100"),
-            String::from("11110"),
-            String::from("10110"),
-            String::from("10111"),
-            String::from("10101"),
-            String::from("01111"),
-            String::from("00111"),
-            String::from("11100"),
-            String::from("10000"),
-            String::from("11001"),
-            String::from("00010"),
-            String::from("01010"),
-        ];
-    
+    fn part2(&mut self) {    
         let o2_rating = self.get_rating(true);
         let co2_rating= self.get_rating(false);
     
-        println!("O2: {}, CO2: {}", o2_rating, co2_rating);
         println!("Part 2: {}", o2_rating * co2_rating);
     }
 }
