@@ -1,5 +1,5 @@
 use super::{read_file, Solve};
-use std::collections::{HashSet, HashMap};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Point {
