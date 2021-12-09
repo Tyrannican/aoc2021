@@ -1,7 +1,7 @@
 mod common;
 use common::Solve;
-mod day07;
-use day07::solution::Solution;
+mod day08;
+use day08::solution::Solution;
 
 fn main() {
     let mut s = Solution::new();
