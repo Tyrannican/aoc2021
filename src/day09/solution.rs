@@ -52,7 +52,7 @@ impl Map {
         }
     }
 
-    fn calculate_basins(&self) -> i32 {
+    fn calculate_largest_basin_sizes(&self) -> i32 {
         let mut totals = Vec::new();
         for point in &self.low_points {
             let surrounding = self.get_surrounding_points(point.x, point.y);
@@ -74,10 +74,10 @@ impl Map {
     }
     
     fn get_surrounding_points(&self, x: usize, y: usize) -> Vec<(usize, usize)> {
-        // let directions = vec![(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)];
-        let directions = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
-        let mut points = vec![(x, y)];
         let mut hs = HashSet::new();
+        let mut points = vec![(x, y)];
+        let directions = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
+
         loop {
             let mut to_add = Vec::new();
             for (pt_x, pt_y) in points.drain(..) {
@@ -88,7 +88,6 @@ impl Map {
                         to_add.push((new_x, new_y));
                     }
                 }
-                
             }
             
             for (x, y) in to_add {
@@ -135,7 +134,7 @@ impl Solve for Solution {
     }
 
     fn part2(&mut self) {
-        let largest_basins = self.map.calculate_basins();
+        let largest_basins = self.map.calculate_largest_basin_sizes();
         println!("Part 2: {}", largest_basins);
     }
 }
